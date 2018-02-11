@@ -37,8 +37,7 @@ def _print_json(function):
             payload = json.dumps(function(*args, **kwargs))
             ret = requests.post(farmware_api_url() + 'celery_script',
                           data=payload, headers=headers)
-            log(ret, message_type='info', title='wrapper')
-            return
+            return ret
     return wrapper
 
 

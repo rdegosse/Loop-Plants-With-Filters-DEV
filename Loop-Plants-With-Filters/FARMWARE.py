@@ -49,6 +49,9 @@ class MyFarmware():
         self.api = API(self)
         self.points = []
 
+    def check_celerypy(self,ret):
+        log(ret, message_type='info', title=self.farmwarename)
+
     def apply_filters(self, points, point_name='', openfarm_slug='', age_min_day=0, age_max_day=36500, meta_key='', meta_value='', pointer_type='Plant'):
         if self.input_debug >= 1: log(points, message_type='debug', title=str(self.farmwarename) + ' : load_points')
         filtered_points = []
@@ -135,10 +138,11 @@ class MyFarmware():
     def move_absolute_point(self,point):
             if self.input_debug >= 1: log('Move absolute: ' + str(point) , message_type='debug', title=str(self.farmwarename) + ' : move_absolute_point')
             if self.input_debug < 2: 
-                move_absolute(
+                self.check_celerypy(
+                    move_absolute(
                     location=[point['x'],point['y'] ,self.input_default_z],
                     offset=[0, 0, 0],
-                    speed=self.input_default_speed)
+                    speed=self.input_default_speed))
 
     def save_meta(self,point):
         if str(self.input_save_meta_key).lower() != 'none':
