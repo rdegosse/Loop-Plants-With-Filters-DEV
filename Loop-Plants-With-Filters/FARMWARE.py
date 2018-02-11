@@ -50,7 +50,7 @@ class MyFarmware():
         self.points = []
 
     def check_celerypy(self,ret):
-        log(ret, message_type='info', title=self.farmwarename)
+        log(ret.raw, message_type='info', title=self.farmwarename)
 
     def apply_filters(self, points, point_name='', openfarm_slug='', age_min_day=0, age_max_day=36500, meta_key='', meta_value='', pointer_type='Plant'):
         if self.input_debug >= 1: log(points, message_type='debug', title=str(self.farmwarename) + ' : load_points')
