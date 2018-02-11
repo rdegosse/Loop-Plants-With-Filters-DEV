@@ -57,10 +57,14 @@ class MyFarmware():
         except:
             status_code = -1
         try:
-            text = ret.text
+            text = ret.text[:100]
         except expression as identifier:
             text = ret
-        log("{} -> {}".format(status_code,text), message_type='info', title=self.farmwarename + ' check_celerypy')
+        if status_code == -1 or status_code == 200:
+            if self.input_debug >= 1: log("{} -> {}".format(status_code,text), message_type='debug', title=self.farmwarename + ' check_celerypy')
+        else:
+            log("{} -> {}".format(status_code,text), message_type='error', title=self.farmwarename + ' check_celerypy')
+            raise
 
     def apply_filters(self, points, point_name='', openfarm_slug='', age_min_day=0, age_max_day=36500, meta_key='', meta_value='', pointer_type='Plant'):
         if self.input_debug >= 1: log(points, message_type='debug', title=str(self.farmwarename) + ' : load_points')
@@ -119,14 +123,14 @@ class MyFarmware():
     def execute_sequence_init(self):
         if self.input_sequence_init_id != -1 :
             if self.input_debug >= 1: log('Execute Sequence: ' + self.input_sequence_init + ' id:' + str(self.input_sequence_init_id), message_type='debug', title=str(self.farmwarename) + ' : execute_sequence_init')
-            if self.input_debug < 2: execute_sequence(sequence_id=self.input_sequence_init_id)
+            if self.input_debug < 2: self.check_celerypy(execute_sequence(sequence_id=self.input_sequence_init_id))
         else:
             if self.input_debug >= 1: log('Sequence Not Found', message_type='debug', title=str(self.farmwarename) + ' : execute_sequence_init')
 
     def execute_sequence_before(self):
         if self.input_sequence_beforemove_id != -1 : 
             if self.input_debug >= 1: log('Execute Sequence: ' + self.input_sequence_beforemove + ' id:' + str(self.input_sequence_beforemove_id), message_type='debug', title=str(self.farmwarename) + ' : execute_sequence_before')
-            if self.input_debug < 2: execute_sequence(sequence_id=self.input_sequence_beforemove_id)
+            if self.input_debug < 2: self.check_celerypy(execute_sequence(sequence_id=self.input_sequence_beforemove_id))
         else:
             if self.input_debug >= 1: log('Sequence Not Found', message_type='debug', title=str(self.farmwarename) + ' : execute_sequence_before')
                 
@@ -134,22 +138,21 @@ class MyFarmware():
     def execute_sequence_after(self):
         if self.input_sequence_aftermove_id != -1 : 
             if self.input_debug >= 1: log('Execute Sequence: ' + self.input_sequence_aftermove + ' id:' + str(self.input_sequence_aftermove_id), message_type='debug', title=str(self.farmwarename) + ' : execute_sequence_after')
-            if self.input_debug < 2: execute_sequence(sequence_id=self.input_sequence_aftermove_id)
+            if self.input_debug < 2: self.check_celerypy(execute_sequence(sequence_id=self.input_sequence_aftermove_id))
         else:
             if self.input_debug >= 1: log('Sequence Not Found', message_type='debug', title=str(self.farmwarename) + ' : execute_sequence_after')
 
     def execute_sequence_end(self):
         if self.input_sequence_end_id != -1 : 
             if self.input_debug >= 1: log('Execute Sequence: ' + self.input_sequence_end + ' id:' + str(self.input_sequence_end_id), message_type='debug', title=str(self.farmwarename) + ' : execute_sequence_end')
-            if self.input_debug < 2: execute_sequence(sequence_id=self.input_sequence_end_id)
+            if self.input_debug < 2: self.check_celerypy(execute_sequence(sequence_id=self.input_sequence_end_id))
         else:
             if self.input_debug >= 1: log('Sequence Not Found' , message_type='debug', title=str(self.farmwarename) + ' : execute_sequence_end')
 
     def move_absolute_point(self,point):
             if self.input_debug >= 1: log('Move absolute: ' + str(point) , message_type='debug', title=str(self.farmwarename) + ' : move_absolute_point')
             if self.input_debug < 2: 
-                self.check_celerypy(
-                    move_absolute(
+                self.check_celerypy(move_absolute(
                     location=[point['x'],point['y'] ,self.input_default_z],
                     offset=[0, 0, 0],
                     speed=self.input_default_speed))
