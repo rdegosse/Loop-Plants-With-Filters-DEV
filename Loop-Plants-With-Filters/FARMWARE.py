@@ -10,6 +10,7 @@ class MyFarmware():
     def get_input_env(self):
         prefix = self.farmwarename.lower().replace('-','_')
         
+        self.input_title = os.environ.get(prefix+"_title", '-')
         self.input_pointname = os.environ.get(prefix+"_pointname", '*')
         self.input_openfarm_slug = os.environ.get(prefix+"_openfarm_slug", '*')
         self.input_age_min_day = int(os.environ.get(prefix+"_age_min_day", -1))
@@ -27,6 +28,7 @@ class MyFarmware():
         self.input_debug = int(os.environ.get(prefix+"_debug", 1))
 
         if self.input_debug >= 1:
+            log('title: {}'.format(self.input_title), message_type='debug', title=self.farmwarename)
             log('pointname: {}'.format(self.input_pointname), message_type='debug', title=self.farmwarename)
             log('openfarm_slug: {}'.format(self.input_openfarm_slug), message_type='debug', title=self.farmwarename)
             log('age_min_day: {}'.format(self.input_age_min_day), message_type='debug', title=self.farmwarename)
