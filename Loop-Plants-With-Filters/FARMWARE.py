@@ -118,14 +118,21 @@ class MyFarmware():
                         b_meta = False
                 else:
                     b_meta = True
-                if str(min_x).lower() == 'none' or str(min_y).lower() == 'none' or str(max_x).lower() == 'none' or str(max_y).lower() == 'none':
-                    b_coordinate = True
+                if str(min_x).lower() == 'none' or str(max_x).lower() == 'none':
+                    b_coordinate_x = True
                 else:
-                    if int(min_x) <= int(p['x']) <= int(max_x) and int(min_y) <= int(p['y']) <= int(max_y):
-                        b_coordinate = True
+                    if int(min_x) <= int(p['x']) <= int(max_x):
+                        b_coordinate_x = True
                     else:
-                        b_coordinate = False
-                if  (p['name'].lower() == point_name.lower() or point_name == '*') and (p['openfarm_slug'].lower() == openfarm_slug.lower() or openfarm_slug == '*') and (age_min_day <= age_day <= age_max_day) and b_meta==True and b_coordinate:
+                        b_coordinate_x = False
+                if str(min_y).lower() == 'none' or str(max_y).lower() == 'none':
+                    b_coordinate_y = True
+                else:
+                    if int(min_y) <= int(p['y']) <= int(max_y):
+                        b_coordinate_y = True
+                    else:
+                        b_coordinate_y = False
+                if  (p['name'].lower() == point_name.lower() or point_name == '*') and (p['openfarm_slug'].lower() == openfarm_slug.lower() or openfarm_slug == '*') and (age_min_day <= age_day <= age_max_day) and b_meta==True and b_coordinate_x and b_coordinate_y:
                     filtered_points.append(p.copy())
         return filtered_points
 
