@@ -42,6 +42,7 @@ class MyFarmware():
             log('age_min_day: {}'.format(self.input_age_min_day), message_type='debug', title=self.farmwarename)
             log('age_max_day: {}'.format(self.input_age_max_day), message_type='debug', title=self.farmwarename)
             log('filter_meta_key: {}'.format(self.input_filter_meta_key), message_type='debug', title=self.farmwarename)
+            log('filter_meta_op: {}'.format(self.input_filter_meta_op), message_type='debug', title=self.farmwarename)
             log('filter_meta_value: {}'.format(self.input_filter_meta_value), message_type='debug', title=self.farmwarename)
             log('filter_min_x: {}'.format(self.input_filter_min_x), message_type='debug', title=self.farmwarename)
             log('filter_max_x: {}'.format(self.input_filter_max_x), message_type='debug', title=self.farmwarename)
@@ -105,13 +106,13 @@ class MyFarmware():
                         elif self.input_filter_meta_op.lower() == "regex":
                             b_meta = bool(re.compile(meta_value).match(p['meta'][meta_key]))
                         elif self.input_filter_meta_op.lower() == "daysmax":
-                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).days <= meta_value)
+                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).days <= int(meta_value))
                         elif self.input_filter_meta_op.lower() == "minutesmax":
-                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).minute <= meta_value)
+                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).minute <= int(meta_value))
                         elif self.input_filter_meta_op.lower() == "daysmin":
-                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).days >= meta_value)
+                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).days >= int(meta_value))
                         elif self.input_filter_meta_op.lower() == "minutesmin":
-                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).minute >= meta_value)     
+                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).minute >= int(meta_value))
                         else:
                             b_meta = False
                     except Exception as e:
