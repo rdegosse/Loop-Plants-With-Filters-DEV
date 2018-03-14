@@ -116,6 +116,7 @@ class MyFarmware():
                         else:
                             b_meta = False
                     except Exception as e:
+                        if self.input_debug >= 1: log(e, message_type='error', title=str(self.farmwarename) + ' : exception filter_meta')
                         b_meta = False
                 else:
                     b_meta = True
