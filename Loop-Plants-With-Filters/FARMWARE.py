@@ -19,6 +19,7 @@ class MyFarmware():
         self.input_filter_meta_key = os.environ.get(prefix+"_filter_meta_key", 'None')
         self.input_filter_meta_op = os.environ.get(prefix+"_filter_meta_op", 'None')
         self.input_filter_meta_value = os.environ.get(prefix+"_filter_meta_value", 'None')
+        self.input_filter_plant_stage = os.environ.get(prefix+"_filter_plant_stage", 'None')
         self.input_filter_min_x = os.environ.get(prefix+"_filter_min_x", 'None')
         self.input_filter_max_x = os.environ.get(prefix+"_filter_max_x", 'None')
         self.input_filter_min_y = os.environ.get(prefix+"_filter_min_y", 'None')
@@ -29,6 +30,7 @@ class MyFarmware():
         self.input_sequence_end = os.environ.get(prefix+"_sequence_end", 'None').split(",")
         self.input_save_meta_key = os.environ.get(prefix+"_save_meta_key", 'None')
         self.input_save_meta_value = os.environ.get(prefix+"_save_meta_value", 'None')
+        self.input_save_plant_stage = os.environ.get(prefix+"_save_plant_stage", 'None')
         self.input_offset_x = int(os.environ.get(prefix+"_offset_x", 0))
         self.input_offset_y = int(os.environ.get(prefix+"_offset_y", 0))
         self.input_default_z = int(os.environ.get(prefix+"_default_z", 0))
@@ -44,6 +46,7 @@ class MyFarmware():
             log('filter_meta_key: {}'.format(self.input_filter_meta_key), message_type='debug', title=self.farmwarename)
             log('filter_meta_op: {}'.format(self.input_filter_meta_op), message_type='debug', title=self.farmwarename)
             log('filter_meta_value: {}'.format(self.input_filter_meta_value), message_type='debug', title=self.farmwarename)
+            log('filter_plant_stage: {}'.format(self.input_filter_plant_stage), message_type='debug', title=self.farmwarename)
             log('filter_min_x: {}'.format(self.input_filter_min_x), message_type='debug', title=self.farmwarename)
             log('filter_max_x: {}'.format(self.input_filter_max_x), message_type='debug', title=self.farmwarename)
             log('filter_min_y: {}'.format(self.input_filter_min_y), message_type='debug', title=self.farmwarename)
@@ -54,6 +57,7 @@ class MyFarmware():
             log('sequence_end: {}'.format(self.input_sequence_end), message_type='debug', title=self.farmwarename)
             log('save_meta_key: {}'.format(self.input_save_meta_key), message_type='debug', title=self.farmwarename)
             log('save_meta_value: {}'.format(self.input_save_meta_value), message_type='debug', title=self.farmwarename)
+            log('save_plant_stage: {}'.format(self.input_save_plant_stage), message_type='debug', title=self.farmwarename)
             log('offset_x: {}'.format(self.input_offset_x), message_type='debug', title=self.farmwarename)
             log('offset_y: {}'.format(self.input_offset_y), message_type='debug', title=self.farmwarename)
             log('default_z: {}'.format(self.input_default_z), message_type='debug', title=self.farmwarename)
@@ -73,7 +77,7 @@ class MyFarmware():
             status_code = -1
         try:
             text = ret.text[:100]
-        except expression as identifier:
+        except:
             text = ret
         if status_code == -1 or status_code == 200:
             if self.input_debug >= 1: log("{} -> {}".format(status_code,text), message_type='debug', title=self.farmwarename + ' check_celerypy')
@@ -81,7 +85,7 @@ class MyFarmware():
             log("{} -> {}".format(status_code,text), message_type='error', title=self.farmwarename + ' check_celerypy')
             raise
 
-    def apply_filters(self, points, point_name='', openfarm_slug='', age_min_day=0, age_max_day=36500, meta_key='', meta_value='', min_x='none', max_x='none', min_y='none', max_y='none', pointer_type='Plant'):
+    def apply_filters(self, points, point_name='', openfarm_slug='', age_min_day=0, age_max_day=36500, meta_key='', meta_value='', min_x='none', max_x='none', min_y='none', max_y='none', pointer_type='Plant', plant_stage='none'):
         if self.input_debug >= 1: log(points, message_type='debug', title=str(self.farmwarename) + ' : load_points')
         filtered_points = []
         now = datetime.datetime.utcnow()
@@ -134,7 +138,17 @@ class MyFarmware():
                         b_coordinate_y = True
                     else:
                         b_coordinate_y = False
-                if  (p['name'].lower() == point_name.lower() or point_name == '*') and (p['openfarm_slug'].lower() == openfarm_slug.lower() or openfarm_slug == '*') and (age_min_day <= age_day <= age_max_day) and b_meta==True and b_coordinate_x and b_coordinate_y:
+                if plant_stage.lower() == 'none':
+                    b_plantstage = True
+                else:
+                    try:
+                        if plant_stage.lower() == p['plant_stage'].lower():
+                            b_plantstage = True
+                        else:
+                            b_plantstage = False
+                    except Exception as e:
+                        b_plantstage = True
+                if  (p['name'].lower() == point_name.lower() or point_name == '*') and (p['openfarm_slug'].lower() == openfarm_slug.lower() or openfarm_slug == '*') and (age_min_day <= age_day <= age_max_day) and b_meta==True and b_coordinate_x and b_coordinate_y and b_plantstage:
                     filtered_points.append(p.copy())
         return filtered_points
 
@@ -151,7 +165,8 @@ class MyFarmware():
             min_y=self.input_filter_min_y,
             max_x=self.input_filter_max_x,
             max_y=self.input_filter_max_y,
-            pointer_type='Plant')
+            pointer_type='Plant',
+            plant_stage=self.input_filter_plant_stage)
         if self.input_debug >= 1: log(self.points, message_type='debug', title=str(self.farmwarename) + ' : load_points_with_filters')
         
 
@@ -232,8 +247,18 @@ class MyFarmware():
             if self.input_debug >= 1: log('Save Meta Information: ' + str(point) , message_type='debug', title=str(self.farmwarename) + ' : save_meta')
             if self.input_debug < 2 :
                 endpoint = 'points/{}'.format(point['id'])
-                self.api.api_put(endpoint=endpoint, data=point)            
-
+                self.api.api_put(endpoint=endpoint, data=point)
+                    
+    def save_plant_stage(self,point):
+        if str(self.input_save_plant_stage).lower() == 'planned' or str(self.input_save_plant_stage).lower() == 'planted' or str(self.input_save_plant_stage).lower() == 'harvested':
+            point['plant_stage'] = str(self.input_save_plant_stage).lower()
+            if self.input_debug >= 1: log('Save Plant Stage: ' + str(point) , message_type='debug', title=str(self.farmwarename) + ' : save_plant_stage')
+            if self.input_debug < 2 :
+                endpoint = 'points/{}'.format(point['id'])
+                self.api.api_put(endpoint=endpoint, data=point)
+        else:
+            log('Save Plant Stage: wrong value :' + str(point) , message_type='error', title=str(self.farmwarename) + ' : save_plant_stage')
+    
 
     def loop_points(self):
         for p in self.points:
@@ -241,6 +266,7 @@ class MyFarmware():
             self.move_absolute_point(p)
             self.execute_sequence_after()
             self.save_meta(p)
+            self.save_plant_stage(p)
     
     
     def run(self):
