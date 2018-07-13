@@ -3,15 +3,7 @@
  "language": "python",
  "author": "rdegosse",
  "description": "Loop plants with filters, execute sequences and save meta data : DEV ONLY",
-<<<<<<< HEAD
-<<<<<<< HEAD
- "version": "1.0.20",
-=======
- "version": "1.0.18",
->>>>>>> parent of aeb47a1... test 19
-=======
- "version": "1.0.19",
->>>>>>> parent of 8cc61d1... test 20
+ "version": "1.0.21",
  "min_os_version_major": 6,
  "url": "https://raw.githubusercontent.com/rdegosse/Loop-Plants-With-Filters-Dev/master/manifest.json",
  "zip": "https://github.com/rdegosse/Loop-Plants-With-Filters-Dev/archive/master.zip",
