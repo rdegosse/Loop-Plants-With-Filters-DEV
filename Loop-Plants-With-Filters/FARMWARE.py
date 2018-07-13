@@ -114,13 +114,13 @@ class MyFarmware():
                         elif self.input_filter_meta_op.lower() == "regex":
                             b_meta = bool(re.compile(meta_value).match(p['meta'][meta_key]))
                         elif self.input_filter_meta_op.lower() == "daysmax":
-                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).total_seconds/86400 <= int(meta_value))
+                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).total_seconds()/86400 <= int(meta_value))
                         elif self.input_filter_meta_op.lower() == "minutesmax":
-                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).total_seconds/60 <= int(meta_value))
+                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).total_seconds()/60 <= int(meta_value))
                         elif self.input_filter_meta_op.lower() == "daysmin":
-                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).total_seconds/86400 >= int(meta_value))
+                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).total_seconds()/86400 >= int(meta_value))
                         elif self.input_filter_meta_op.lower() == "minutesmin":
-                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).total_seconds/60 >= int(meta_value))
+                            b_meta = bool((datetime.datetime.utcnow() - datetime.datetime.strptime(p['meta'][meta_key], '%Y-%m-%d %H:%M:%S.%f')).total_seconds()/60 >= int(meta_value))
                         else:
                             b_meta = False
                     except Exception as e:
