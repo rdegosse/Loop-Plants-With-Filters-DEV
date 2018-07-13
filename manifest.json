@@ -4,10 +4,14 @@
  "author": "rdegosse",
  "description": "Loop plants with filters, execute sequences and save meta data : DEV ONLY",
 <<<<<<< HEAD
+<<<<<<< HEAD
  "version": "1.0.20",
 =======
  "version": "1.0.18",
 >>>>>>> parent of aeb47a1... test 19
+=======
+ "version": "1.0.19",
+>>>>>>> parent of 8cc61d1... test 20
  "min_os_version_major": 6,
  "url": "https://raw.githubusercontent.com/rdegosse/Loop-Plants-With-Filters-Dev/master/manifest.json",
  "zip": "https://github.com/rdegosse/Loop-Plants-With-Filters-Dev/archive/master.zip",
@@ -27,10 +31,10 @@
   {"name": "filter_max_x", "label": "Filter by coordinate - Max X", "value": "None"},
   {"name": "filter_min_y", "label": "Filter by coordinate - Min Y", "value": "None"},
   {"name": "filter_max_y", "label": "Filter by coordinate - Max Y", "value": "None"},
-  {"name": "sequence_init", "label": "Init Sequences Name - one time (seq1,Seq2,...)", "value": "None"},
-  {"name": "sequence_beforemove", "label": "Sequences Name Before Next Move - each plant (seq1,Seq2,...)", "value": "None"},
-  {"name": "sequence_aftermove", "label": "Sequences Name After Move - each plant (seq1,Seq2,...)", "value": "None"},
-  {"name": "sequence_end", "label": "End Sequences Name - one time (seq1,Seq2,...)", "value": "None"},
+  {"name": "sequence_init", "label": "Init Sequence Name - one time (se1,Seq2,...)", "value": "None"},
+  {"name": "sequence_beforemove", "label": "Sequence Name Before Next Move - each plant (se1,Seq2,...)", "value": "None"},
+  {"name": "sequence_aftermove", "label": "Sequence Name After Move - each plant (se1,Seq2,...)", "value": "None"},
+  {"name": "sequence_end", "label": "End Sequence Name - one time (se1,Seq2,...)", "value": "None"},
   {"name": "save_meta_key", "label": "Save in meta data : key", "value": "None"},
   {"name": "save_meta_value", "label": "Save in meta data : value (str or #NOW#)", "value": "None"},
   {"name": "save_plant_stage", "label": "Set plant stage (none,planned,planted,harvested)", "value": "None"},
