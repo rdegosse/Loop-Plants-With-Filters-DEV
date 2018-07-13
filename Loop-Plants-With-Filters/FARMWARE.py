@@ -92,7 +92,11 @@ class MyFarmware():
         for p in points:
             if p['pointer_type'].lower() == pointer_type.lower():
                 b_meta = False
-                age_day = (now - datetime.datetime.strptime(p['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ')).days
+                if str(p['planted_at']).lower() == 'none':
+                    ref_date = p['created_at']
+                else:
+                    ref_date = p['planted_at']
+                age_day = (now - datetime.datetime.strptime(ref_date, '%Y-%m-%dT%H:%M:%S.%fZ')).days
                 if str(meta_key).lower() != 'none':
                     try:
                         if self.input_filter_meta_op.lower() == "none" or self.input_filter_meta_op.lower() == "==":
@@ -252,6 +256,8 @@ class MyFarmware():
     def save_plant_stage(self,point):
         if str(self.input_save_plant_stage).lower() == 'planned' or str(self.input_save_plant_stage).lower() == 'planted' or str(self.input_save_plant_stage).lower() == 'harvested':
             point['plant_stage'] = str(self.input_save_plant_stage).lower()
+            if str(self.input_save_plant_stage).lower() == 'planted':
+                point['planted_at'] = str(datetime.datetime.utcnow())
             if self.input_debug >= 1: log('Save Plant Stage: ' + str(point) , message_type='debug', title=str(self.farmwarename) + ' : save_plant_stage')
             if self.input_debug < 2 :
                 endpoint = 'points/{}'.format(point['id'])
