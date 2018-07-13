@@ -92,7 +92,7 @@ class MyFarmware():
         for p in points:
             if p['pointer_type'].lower() == pointer_type.lower():
                 b_meta = False
-                if str(p['planted_at']).lower() == 'none' or p['planted_at']).lower() == None:
+                if str(p['planted_at']).lower() == 'none' or str(p['planted_at']).lower() == None:
                     ref_date = p['created_at']
                 else:
                     ref_date = p['planted_at']
